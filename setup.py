@@ -8,6 +8,10 @@ from setuptools import setup, find_packages
 import re, os
 
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+
 def get_version():
     """
     Extracts the version number from a version file.
@@ -30,6 +34,8 @@ setup(name = "unijson",
       author = "Bastien Pietropaoli",
       author_email = "bastien.pietropaoli@gmail.com",
       description = "Universal JSON encoder/decoder for Python objects",
+      long_description=long_description,
+      long_description_content_type="text/markdown",
       license = "Apache v2.0",
       packages = find_packages(),
       install_requires = [

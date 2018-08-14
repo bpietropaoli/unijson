@@ -4,7 +4,7 @@ This small Python package enables encoding / decoding most Python objects into /
 
 The rationale for this package is pretty simple: I like to be able to dump/load my objects in an easily readable format pretty much anywhere (e.g. a DB, another program, another Python program). This is particularly practical to use with applications using MongoDB.
 
-This package works with Python version 2.7, 3.4, 3.5, and 3.6 (the unit tests passed for all those versions). To install it, clone the git and simply use `python setup.py install` OR you can also install it via `pip install unijson` since it's also registered on PyPi [here](https://pypi.org/project/unijson/).
+This package works with Python version 2.7, 3.4, 3.5, 3.6 and 3.7 (the unit tests passed for all those versions). To install it, clone the git and simply use `python setup.py install` OR you can also install it via `pip install unijson` since it's also registered on PyPi [here](https://pypi.org/project/unijson/).
 
 Here is what you can do with this little package.
 

@@ -23,6 +23,8 @@ import types, importlib, re, __main__
 
 # Convertible types:
 import datetime, pytz
+# Used to parse datetimes/dates/times:
+import parse
 
 
 #########################################################################################
@@ -128,7 +130,7 @@ class UniversalJSONEncoder(json.JSONEncoder):
     How to use this class:
         `json.dumps(obj, cls=UniversalJSONEncoder)`
                         OR
-        `ujson.dumps(obj)`
+        `unijson.dumps(obj)`
     """
     # The registered encoding functions:
     _encoders = {}
@@ -233,7 +235,7 @@ class UniversalJSONDecoder(json.JSONDecoder):
     How to use this class:
         `json.loads(s, cls=UniversalJSONDecoder)`
                         OR
-        `ujson.loads(s)`
+        `unijson.loads(s)`
     """
     # The registered decoding functions:
     _decoders = {}
@@ -357,48 +359,53 @@ for tz in pytz.all_timezones:
     UniversalJSONEncoder.register(type(pytz.timezone(tz)), json_encode_timezone)
 # Won't need a decoder since I use `timezone` instead of the classes.
 
+#########################################################################################
 
 def json_encode_date(d):
     """Encoder for dates (from module datetime)."""
-    return {"day"   : d.day,
-            "month" : d.month,
-            "year"  : d.year}
+    return {"date" : str(d)}
 UniversalJSONEncoder.register(datetime.date, json_encode_date)
-# Verbose but won't require a decoder.
 
+def json_decode_date(d):
+    """Decoder for dates (from module datetime)."""
+    p = parse.parse("{year:d}-{month:d}-{day:d}", d["date"])
+    return datetime.date(p["year"], p["month"], p["day"])
+UniversalJSONDecoder.register(datetime.date, json_decode_date)
+
+#########################################################################################
 
 def json_encode_datetime(d):
-    """Encode for datetimes (from module datetime)."""
-    return {"year"        : d.year,
-            "month"       : d.month,
-            "day"         : d.day,
-            "hour"        : d.hour,
-            "minute"      : d.minute,
-            "second"      : d.second,
-            "microsecond" : d.microsecond,
-            "tzinfo"      : d.tzinfo}
+    """Encoder for datetimes (from module datetime)."""
+    return {"datetime" : d.strftime("%Y-%m-%d %H:%M:%S.%f"),
+            "tzinfo"   : d.tzinfo}
 UniversalJSONEncoder.register(datetime.datetime, json_encode_datetime)
-# Verbose but won't require a decoder.
-# Also, I chose this because timezones are just a massive mess to deal with.
-# Using a datetime in the form of a string would result in nasty timezone management.
 
+def json_decode_datetime(d):
+    """Decoder for datetimes (from module datetime)."""
+    return datetime.datetime.strptime(d["datetime"], "%Y-%m-%d %H:%M:%S.%f").replace(tzinfo=d["tzinfo"])
+UniversalJSONDecoder.register(datetime.datetime, json_decode_datetime)
+
+#########################################################################################
 
 def json_encode_time(t):
     """Encoder for times (from module datetime)."""
-    return {"hour"        : t.hour,
-            "minute"      : t.minute,
-            "second"      : t.second,
-            "microsecond" : t.microsecond,
-            "tzinfo"      : t.tzinfo}
+    return {"time"   : t.strftime("%H:%M:%S.%f"),
+            "tzinfo" : t.tzinfo}
 UniversalJSONEncoder.register(datetime.time, json_encode_time)
-# Verbose but won't require a decoder.
 
+def json_decode_time(d):
+    """Decoder for times (from module datetime)."""
+    p = parse.parse("{hh:d}:{mm:d}:{ss:d}.{ms:d}", d["time"])
+    return datetime.time(p["hh"], p["mm"], p["ss"], p["ms"], tzinfo=d["tzinfo"])
+UniversalJSONDecoder.register(datetime.time, json_decode_time)
+
+#########################################################################################
 
 def json_encode_timedelta(t):
     """Encoder for timedeltas (from module datetime)."""
     return {"seconds" : t.total_seconds()}
 UniversalJSONEncoder.register(datetime.timedelta, json_encode_timedelta)
-# Won't require a decoder.
+# Won't require a decoder since "seconds" will be automatically passed to a constructor.
 
 
 #########################################################################################

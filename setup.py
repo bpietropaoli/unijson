@@ -1,17 +1,19 @@
 """
-Installer for the ujson Python package.
+Installer for the unijson Python package.
 Do not modify.
 """
 
+
 from setuptools import setup, find_packages
 import re, os
+
 
 def get_version():
     """
     Extracts the version number from a version file.
     Found here: https://milkr.io/kfei/5-common-patterns-to-version-your-Python-package
     """
-    VERSIONFILE = os.path.join('ujson', '__init__.py')
+    VERSIONFILE = os.path.join('unijson', '__init__.py')
     initfile_lines = open(VERSIONFILE, 'rt').readlines()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
     for line in initfile_lines:
@@ -22,15 +24,27 @@ def get_version():
 
 
 # Setup configuration
-setup(name = "ujson",
+setup(name = "unijson",
       version = get_version(),
-      url = "",
+      url = "https://github.com/bpietropaoli/unijson",
       author = "Bastien Pietropaoli",
       author_email = "bastien.pietropaoli@gmail.com",
-      description = "Universal JSON Encoder/Decoder for Python objects",
+      description = "Universal JSON encoder/decoder for Python objects",
       license = "Apache v2.0",
       packages = find_packages(),
       install_requires = [
-        "pytz"  # For timezones management in datetimes
+        "pytz",  # For timezones management in datetimes
+        "parse"  # For the parsing of dates and times
+      ],
+      classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Topic :: Utilities"
       ],
       zip_safe = False)

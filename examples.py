@@ -14,20 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-import json, ujson
+import json, unijson
 
 
 ###################################################################################################
-# ujson for already supported types:
+# unijson for already supported types:
 d = {"peuh": 123, "pouet": [True, False, None, "ruguhregr"]}
 
 # Both will return the same string:
 json.dumps(d)
-ujson.dumps(d)
+unijson.dumps(d)
 
 
 ###################################################################################################
-# ujson for custom classes:
+# unijson for custom classes:
 
 # Define a custom class
 class Test(object):
@@ -39,8 +39,8 @@ o1 = Test(12, 34)
 # json.dumps(o1) would raise an exception.
 # TypeError: Object of type 'Test' is not JSON serializable
 
-# ujson won't blink:
-ujson.dumps(o1) # {"a1": 12, "a2": 34, "__class__": "Test", "__module__": "examples"}
+# unijson won't blink:
+unijson.dumps(o1) # {"a1": 12, "a2": 34, "__class__": "Test", "__module__": "examples"}
 
 
 ###################################################################################################
@@ -62,5 +62,16 @@ class DefineMethods(object):
         return self.__dict__ == other.__dict__
 
 o = DefineMethods("whatever", False)
-s = ujson.dumps(o) # '{"a1": "whatever", "a2": false, "extra": "for the fun", "__class__": "DefineMethods", "__module__": "examples"}'
-d = ujson.loads(s) # o == d should be True
+s = unijson.dumps(o) # '{"a1": "whatever", "a2": false, "extra": "for the fun", "__class__": "DefineMethods", "__module__": "examples"}'
+d = unijson.loads(s) # o == d should be True
+
+
+###################################################################################################
+# Register a new encoder:
+
+def json_encode_date(d):
+    """Encoder for dates (from module datetime)."""
+    return {"day"   : d.day,
+            "month" : d.month,
+            "year"  : d.year}
+UniversalJSONEncoder.register(datetime.date, json_encode_date)

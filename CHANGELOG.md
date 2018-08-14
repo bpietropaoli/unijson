@@ -1,4 +1,4 @@
-# ujson - Changelog #
+# unijson - Changelog #
 
 The aim of this file is to track the various changes that have / will occur in the development of this package. This is supposed to be human readable. For that purpose, the [Keep a CHANGELOG](https://keepachangelog.com/en/1.0.0/) is used. Moreover, this package adheres to [Semantic Versioning](http://semver.org/).
 

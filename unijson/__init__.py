@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .ujson import dump, dumps, load, loads, UniversalJSONEncoder, UniversalJSONDecoder
+from .unijson import dump, dumps, load, loads, UniversalJSONEncoder, UniversalJSONDecoder
 
 __version__ = "1.0.0"
